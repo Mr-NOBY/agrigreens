@@ -1,7 +1,11 @@
 import 'dart:io';
 
+import 'package:agrigreens/global/client.dart';
+import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+
+import '../var_controller.dart';
 
 MQTTClientWrapper createClient() {
   MQTTClientWrapper newclient = new MQTTClientWrapper();
@@ -21,6 +25,7 @@ enum MqttSubscriptionState { IDLE, SUBSCRIBED }
 
 class MQTTClientWrapper {
   late MqttServerClient client;
+  final varController = Get.put(VarController());
 
   MqttCurrentConnectionState connectionState = MqttCurrentConnectionState.IDLE;
   MqttSubscriptionState subscriptionState = MqttSubscriptionState.IDLE;
@@ -75,11 +80,17 @@ class MQTTClientWrapper {
     // print the message when it is received
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
       final recMess = c[0].payload as MqttPublishMessage;
+      final String topic = c[0].topic;
       var message =
           MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
 
-      print('YOU GOT A NEW MESSAGE:');
-      print(message);
+      print('YOU GOT A NEW MESSAGE:' + message);
+
+      if (topic == 'system1/ph') {
+        varController.PH(message);
+      } else if (topic == 'system1/temp') {
+        varController.temp(message);
+      }
     });
   }
 
@@ -112,5 +123,6 @@ class MQTTClientWrapper {
   void _onConnected() {
     connectionState = MqttCurrentConnectionState.CONNECTED;
     print('OnConnected client callback - Client connection was sucessful');
+    subscribe();
   }
 }

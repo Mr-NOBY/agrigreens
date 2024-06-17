@@ -1,5 +1,6 @@
 import 'package:agrigreens/auth/screens/login_screen.dart';
 import 'package:agrigreens/global/app_themes.dart';
+import 'package:agrigreens/global/client.dart';
 import 'package:agrigreens/repository/auth_repository/auth_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +15,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((value) => Get.put(AuthRepo()));
-  MQTTClientWrapper newclient = createClient();
+  // MQTTClientWrapper newclient = createClient();
+  MQTTClientWrapper newclient = client;
   runApp(const GetMaterialApp(
     // home: MyApp(),
     home: LoginScreen(),

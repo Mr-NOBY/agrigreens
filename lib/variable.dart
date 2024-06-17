@@ -18,18 +18,22 @@ class Variable extends StatelessWidget {
             title: Text("AgriGreens"),
           ),
           body: SingleChildScrollView(
-            child: Column(children: [
-              Obx(
-                () => Text(
-                  controller.n.toString(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Obx(
+                  () => Text(
+                    controller.PH.value,
+                  ),
                 ),
-              ),
-              TextButton(
-                  onPressed: () {
-                    controller.getN();
-                  },
-                  child: Text("Change"))
-            ]),
+                Obx(
+                  () => Text(
+                    controller.temp.value,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
