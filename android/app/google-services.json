@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "123585257056",
+    "project_id": "agri-66670",
+    "storage_bucket": "agri-66670.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123585257056:android:50f868a6e93f4ef898ed05",
+        "android_client_info": {
+          "package_name": "com.example.agrigreens"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMCadQ27KS9E30XYW0x9auEksQ26eXXyc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
