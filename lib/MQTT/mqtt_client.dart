@@ -1,14 +1,16 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:agrigreens/global/client.dart';
 import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../var_controller.dart';
 
 MQTTClientWrapper createClient() {
-  MQTTClientWrapper newclient = new MQTTClientWrapper();
+  MQTTClientWrapper newclient = MQTTClientWrapper();
   newclient.prepareMqttClient();
   return newclient;
 }
@@ -26,19 +28,45 @@ enum MqttSubscriptionState { IDLE, SUBSCRIBED }
 class MQTTClientWrapper {
   late MqttServerClient client;
   final varController = Get.put(VarController());
+  final Connectivity _connectivity = Connectivity();
 
   MqttCurrentConnectionState connectionState = MqttCurrentConnectionState.IDLE;
   MqttSubscriptionState subscriptionState = MqttSubscriptionState.IDLE;
 
-  // using async tasks, so the connection won't hinder the code flow
-  void prepareMqttClient() async {
-    _setupMqttClient();
-    await _connectClient();
-    subscribeToTopic('Dart/Mqtt_client/testtopic');
-    _publishMessage('Hello');
+  bool _hasShownConnectionFailureSnackbar = false;
+  bool _hasShownConnectionRestorationSnackbar = false;
+
+  MQTTClientWrapper() {
+    _connectivity.onConnectivityChanged.listen(_handleConnectivityChange);
   }
 
-  // waiting for the connection, if an error occurs, print it and disconnect
+  void _handleConnectivityChange(ConnectivityResult result) {
+    print('Connectivity changed: $result');
+    if (result == ConnectivityResult.none) {
+      if (!_hasShownConnectionFailureSnackbar) {
+        Get.snackbar(
+          'No Internet Connection',
+          'Please check your internet connection.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        _hasShownConnectionFailureSnackbar = true;
+        _hasShownConnectionRestorationSnackbar = false;
+      }
+      client.disconnect();
+      connectionState = MqttCurrentConnectionState.DISCONNECTED;
+    } else {
+      if (connectionState == MqttCurrentConnectionState.DISCONNECTED ||
+          connectionState == MqttCurrentConnectionState.ERROR_WHEN_CONNECTING) {
+        _connectClient();
+      }
+    }
+  }
+
+  void prepareMqttClient() {
+    _setupMqttClient();
+    _connectClient();
+  }
+
   Future<void> _connectClient() async {
     try {
       print('client connecting....');
@@ -48,17 +76,46 @@ class MQTTClientWrapper {
       print('client exception - $e');
       connectionState = MqttCurrentConnectionState.ERROR_WHEN_CONNECTING;
       client.disconnect();
+      if (!_hasShownConnectionFailureSnackbar) {
+        Get.snackbar(
+          'Connection Failed',
+          'Unable to connect to the MQTT broker.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        _hasShownConnectionFailureSnackbar = true;
+        _hasShownConnectionRestorationSnackbar = false;
+      }
+      return;
     }
 
-    // when connected, print a confirmation, else print an error
     if (client.connectionStatus!.state == MqttConnectionState.connected) {
       connectionState = MqttCurrentConnectionState.CONNECTED;
       print('client connected');
+      if (!_hasShownConnectionRestorationSnackbar) {
+        Get.snackbar(
+          'Connected to MQTT Broker',
+          'You are now connected to the MQTT broker.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        _hasShownConnectionRestorationSnackbar = true;
+        _hasShownConnectionFailureSnackbar = false;
+      }
+      subscribeToTopic('Dart/Mqtt_client/testtopic');
+      _publishMessage('Hello');
     } else {
       print(
           'ERROR client connection failed - disconnecting, status is ${client.connectionStatus}');
       connectionState = MqttCurrentConnectionState.ERROR_WHEN_CONNECTING;
       client.disconnect();
+      if (!_hasShownConnectionFailureSnackbar) {
+        Get.snackbar(
+          'Connection Failed',
+          'Unable to connect to the MQTT broker.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        _hasShownConnectionFailureSnackbar = true;
+        _hasShownConnectionRestorationSnackbar = false;
+      }
     }
   }
 
@@ -77,7 +134,6 @@ class MQTTClientWrapper {
     print('Subscribing to the $topicName topic');
     client.subscribe(topicName, MqttQos.atMostOnce);
 
-    // print the message when it is received
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
       final recMess = c[0].payload as MqttPublishMessage;
       final String topic = c[0].topic;
@@ -109,7 +165,6 @@ class MQTTClientWrapper {
     }
   }
 
-  // callbacks for different events
   void _onSubscribed(String topic) {
     print('Subscription confirmed for topic $topic');
     subscriptionState = MqttSubscriptionState.SUBSCRIBED;
@@ -118,11 +173,28 @@ class MQTTClientWrapper {
   void _onDisconnected() {
     print('OnDisconnected client callback - Client disconnection');
     connectionState = MqttCurrentConnectionState.DISCONNECTED;
+    _reconnect();
   }
 
   void _onConnected() {
     connectionState = MqttCurrentConnectionState.CONNECTED;
-    print('OnConnected client callback - Client connection was sucessful');
+    print('OnConnected client callback - Client connection was successful');
     subscribe();
+  }
+
+  void _reconnect() {
+    if (connectionState == MqttCurrentConnectionState.DISCONNECTED ||
+        connectionState == MqttCurrentConnectionState.ERROR_WHEN_CONNECTING) {
+      print('Attempting to reconnect...');
+      Future.delayed(const Duration(seconds: 3));
+      _connectClient();
+    }
+  }
+
+  void refreshConnection() {
+    _connectivity.checkConnectivity().then((result) {
+      _handleConnectivityChange(result);
+    });
+    _reconnect();
   }
 }
