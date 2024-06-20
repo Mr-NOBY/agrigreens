@@ -37,6 +37,7 @@ class MQTTClientWrapper {
   bool _hasShownConnectionRestorationSnackbar = false;
   bool _isConnected = false;
   bool _isConnecting = false;
+  Timer? _reconnectTimer;
 
   MQTTClientWrapper() {
     _connectivity.onConnectivityChanged.listen(_handleConnectivityChange);
@@ -59,7 +60,7 @@ class MQTTClientWrapper {
     } else {
       if (connectionState == MqttCurrentConnectionState.DISCONNECTED ||
           connectionState == MqttCurrentConnectionState.ERROR_WHEN_CONNECTING) {
-        _connectClient();
+        _scheduleReconnect();
       }
     }
   }
@@ -70,9 +71,11 @@ class MQTTClientWrapper {
   }
 
   Future<void> _connectClient() async {
+    if (_isConnecting) return;
     try {
       print('client connecting....');
       connectionState = MqttCurrentConnectionState.CONNECTING;
+      _isConnecting = true;
       await client.connect('test', 'test');
       _isConnected = true;
     } on Exception catch (e) {
@@ -151,9 +154,9 @@ class MQTTClientWrapper {
 
         print('YOU GOT A NEW MESSAGE: $message');
 
-        if (topic == 'system1/ph') {
+        if (topic == '$EMAIL/system1/ph') {
           varController.PH(message);
-        } else if (topic == 'system1/temp') {
+        } else if (topic == '$EMAIL/system1/temp') {
           varController.temp(message);
         }
       });
@@ -191,7 +194,7 @@ class MQTTClientWrapper {
     print('OnDisconnected client callback - Client disconnection');
     connectionState = MqttCurrentConnectionState.DISCONNECTED;
     _isConnected = false;
-    _reconnect();
+    _scheduleReconnect();
   }
 
   void _onConnected() {
@@ -204,20 +207,21 @@ class MQTTClientWrapper {
     // subscribe();
   }
 
-  void _reconnect() {
-    if (connectionState == MqttCurrentConnectionState.DISCONNECTED ||
-        connectionState == MqttCurrentConnectionState.ERROR_WHEN_CONNECTING) {
-      print('Attempting to reconnect...');
-      Future.delayed(const Duration(seconds: 3), () {
+  void _scheduleReconnect() {
+    if (_reconnectTimer?.isActive ?? false) return;
+    _reconnectTimer = Timer(const Duration(seconds: 3), () {
+      if (connectionState == MqttCurrentConnectionState.DISCONNECTED ||
+          connectionState == MqttCurrentConnectionState.ERROR_WHEN_CONNECTING) {
+        print('Attempting to reconnect...');
         _connectClient();
-      });
-    }
+      }
+    });
   }
 
   void refreshConnection() {
     _connectivity.checkConnectivity().then((result) {
       _handleConnectivityChange(result);
     });
-    _reconnect();
+    _scheduleReconnect();
   }
 }

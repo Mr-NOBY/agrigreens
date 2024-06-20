@@ -20,6 +20,7 @@ class AuthRepo extends GetxController {
 
     if (_auth.currentUser != null) {
       isLoggedIn = true;
+      EMAIL = _auth.currentUser!.email!;
     }
   }
 
@@ -48,6 +49,7 @@ class AuthRepo extends GetxController {
         borderWidth: 1,
       );
       isLoggedIn = true;
+      EMAIL = email;
       subscribe();
     } on FirebaseAuthException catch (e) {
       String message;
@@ -118,6 +120,7 @@ class AuthRepo extends GetxController {
       );
       isLoggedIn = false;
       unsubscribe();
+      EMAIL = '';
     } catch (e) {
       Get.snackbar(
         "Error",
