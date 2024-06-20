@@ -1,9 +1,10 @@
+import 'package:agrigreens/repository/auth_repository/auth_repo.dart';
 import 'package:agrigreens/var_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'global/app_themes.dart';
-import 'global/client.dart';
+import 'package:agrigreens/global/app_themes.dart';
+import 'package:agrigreens/global/client.dart';
 
 class Variable extends StatelessWidget {
   Variable({super.key});
@@ -42,6 +43,11 @@ class Variable extends StatelessWidget {
                         controller.temp.value,
                       ),
                     ),
+                    ElevatedButton(
+                        onPressed: () {
+                          AuthRepo.instance.logout();
+                        },
+                        child: Text('Log out')),
                   ],
                 ),
               ),

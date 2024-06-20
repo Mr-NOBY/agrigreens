@@ -1,3 +1,4 @@
+import 'package:agrigreens/MQTT/mqtt_client.dart';
 import 'package:agrigreens/auth/screens/login_screen.dart';
 import 'package:agrigreens/global/app_themes.dart';
 import 'package:agrigreens/global/client.dart';
@@ -5,10 +6,7 @@ import 'package:agrigreens/repository/auth_repository/auth_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:mqtt_client/mqtt_client.dart';
-import 'package:mqtt_client/mqtt_server_client.dart';
-import 'MQTT/mqtt_client.dart';
-import 'firebase_options.dart';
+import 'package:agrigreens/firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +14,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((value) => Get.put(AuthRepo()));
   // MQTTClientWrapper newclient = createClient();
+  // ignore: unused_local_variable
   MQTTClientWrapper newclient = client;
   runApp(const GetMaterialApp(
     // home: MyApp(),

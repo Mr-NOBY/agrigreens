@@ -1,10 +1,4 @@
-import 'dart:math';
-
-import 'package:agrigreens/global/client.dart';
 import 'package:get/get.dart';
-import 'package:mqtt_client/mqtt_client.dart';
-
-import 'MQTT/mqtt_client.dart';
 
 class VarController extends GetxController {
   // RxInt n = 5.obs;

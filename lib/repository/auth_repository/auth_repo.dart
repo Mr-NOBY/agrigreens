@@ -1,10 +1,9 @@
 import 'package:agrigreens/auth/screens/login_screen.dart';
+import 'package:agrigreens/global/client.dart';
 import 'package:agrigreens/variable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../main.dart';
 
 class AuthRepo extends GetxController {
   static AuthRepo get instance => Get.find();
@@ -18,6 +17,10 @@ class AuthRepo extends GetxController {
     firebaseUser = Rx<User?>(_auth.currentUser);
     firebaseUser.bindStream(_auth.userChanges());
     ever(firebaseUser, setInitialScreen);
+
+    if (_auth.currentUser != null) {
+      isLoggedIn = true;
+    }
   }
 
   setInitialScreen(User? user) {
@@ -44,6 +47,8 @@ class AuthRepo extends GetxController {
         borderColor: Colors.black,
         borderWidth: 1,
       );
+      isLoggedIn = true;
+      subscribe();
     } on FirebaseAuthException catch (e) {
       String message;
       switch (e.code) {
@@ -111,6 +116,8 @@ class AuthRepo extends GetxController {
         borderColor: Colors.black,
         borderWidth: 1,
       );
+      isLoggedIn = false;
+      unsubscribe();
     } catch (e) {
       Get.snackbar(
         "Error",

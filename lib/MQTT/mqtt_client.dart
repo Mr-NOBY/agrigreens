@@ -7,7 +7,7 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import '../var_controller.dart';
+import 'package:agrigreens/var_controller.dart';
 
 MQTTClientWrapper createClient() {
   MQTTClientWrapper newclient = MQTTClientWrapper();
@@ -35,6 +35,8 @@ class MQTTClientWrapper {
 
   bool _hasShownConnectionFailureSnackbar = false;
   bool _hasShownConnectionRestorationSnackbar = false;
+  bool _isConnected = false;
+  bool _isConnecting = false;
 
   MQTTClientWrapper() {
     _connectivity.onConnectivityChanged.listen(_handleConnectivityChange);
@@ -72,6 +74,7 @@ class MQTTClientWrapper {
       print('client connecting....');
       connectionState = MqttCurrentConnectionState.CONNECTING;
       await client.connect('test', 'test');
+      _isConnected = true;
     } on Exception catch (e) {
       print('client exception - $e');
       connectionState = MqttCurrentConnectionState.ERROR_WHEN_CONNECTING;
@@ -85,7 +88,8 @@ class MQTTClientWrapper {
         _hasShownConnectionFailureSnackbar = true;
         _hasShownConnectionRestorationSnackbar = false;
       }
-      return;
+    } finally {
+      _isConnecting = false;
     }
 
     if (client.connectionStatus!.state == MqttConnectionState.connected) {
@@ -130,24 +134,37 @@ class MQTTClientWrapper {
     client.onSubscribed = _onSubscribed;
   }
 
-  void subscribeToTopic(String topicName) {
-    print('Subscribing to the $topicName topic');
-    client.subscribe(topicName, MqttQos.atMostOnce);
+  Future<void> subscribeToTopic(String topicName) async {
+    if (!_isConnected) {
+      await _connectClient();
+    }
 
-    client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
-      final recMess = c[0].payload as MqttPublishMessage;
-      final String topic = c[0].topic;
-      var message =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+    if (_isConnected) {
+      print('Subscribing to the $topicName topic');
+      client.subscribe(topicName, MqttQos.exactlyOnce);
 
-      print('YOU GOT A NEW MESSAGE:' + message);
+      client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
+        final recMess = c[0].payload as MqttPublishMessage;
+        final String topic = c[0].topic;
+        var message =
+            MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
 
-      if (topic == 'system1/ph') {
-        varController.PH(message);
-      } else if (topic == 'system1/temp') {
-        varController.temp(message);
-      }
-    });
+        print('YOU GOT A NEW MESSAGE: $message');
+
+        if (topic == 'system1/ph') {
+          varController.PH(message);
+        } else if (topic == 'system1/temp') {
+          varController.temp(message);
+        }
+      });
+    }
+  }
+
+  void unsubscribeFromTopic(String topicName) {
+    if (_isConnected) {
+      client.unsubscribe(topicName);
+      print('Unsubed from the $topicName topic');
+    }
   }
 
   void _publishMessage(String message) {
@@ -173,21 +190,27 @@ class MQTTClientWrapper {
   void _onDisconnected() {
     print('OnDisconnected client callback - Client disconnection');
     connectionState = MqttCurrentConnectionState.DISCONNECTED;
+    _isConnected = false;
     _reconnect();
   }
 
   void _onConnected() {
     connectionState = MqttCurrentConnectionState.CONNECTED;
+    _isConnected = true;
     print('OnConnected client callback - Client connection was successful');
-    subscribe();
+    if (isLoggedIn) {
+      subscribe();
+    }
+    // subscribe();
   }
 
   void _reconnect() {
     if (connectionState == MqttCurrentConnectionState.DISCONNECTED ||
         connectionState == MqttCurrentConnectionState.ERROR_WHEN_CONNECTING) {
       print('Attempting to reconnect...');
-      Future.delayed(const Duration(seconds: 3));
-      _connectClient();
+      Future.delayed(const Duration(seconds: 3), () {
+        _connectClient();
+      });
     }
   }
 

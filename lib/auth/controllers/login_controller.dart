@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../repository/auth_repository/auth_repo.dart';
-import '../dialogs/reset_password_dialog.dart';
+import 'package:agrigreens/repository/auth_repository/auth_repo.dart';
+import 'package:agrigreens/auth/dialogs/reset_password_dialog.dart';
 
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();
