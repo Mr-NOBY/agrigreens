@@ -20,9 +20,7 @@ class Themes {
     onSecondary: Color.fromRGBO(250, 199, 131, 1),
     error: Colors.red,
     onError: Colors.white,
-    background: Colors.white,
-    onBackground: Color.fromRGBO(17, 70, 60, 1),
-    surface: Color.fromRGBO(250, 199, 131, 1),
+    surface: Colors.white,
     onSurface: Color.fromRGBO(17, 70, 60, 1),
   );
   static const TextTheme textcolorScheme = TextTheme(
@@ -38,8 +36,6 @@ class Themes {
     onSecondary: Color.fromRGBO(17, 70, 60, 1),
     error: Colors.red,
     onError: Colors.white,
-    background: Colors.white,
-    onBackground: Color.fromRGBO(17, 70, 60, 1),
     surface: Color.fromRGBO(17, 70, 60, 1),
     onSurface: Color.fromRGBO(250, 199, 131, 1),
   );

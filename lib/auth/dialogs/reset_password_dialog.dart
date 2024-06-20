@@ -2,7 +2,7 @@ import 'package:agrigreens/global/app_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../repository/auth_repository/auth_repo.dart';
+import 'package:agrigreens/repository/auth_repository/auth_repo.dart';
 
 void resetPasswordDialog() {
   final resetEmail = TextEditingController();
@@ -10,7 +10,7 @@ void resetPasswordDialog() {
   Get.defaultDialog(
     title: "Forgot Password",
     titlePadding: EdgeInsets.symmetric(vertical: 20),
-    titleStyle: TextStyle(color: Themes.darkcolorScheme.onBackground),
+    titleStyle: TextStyle(color: Themes.maincolorScheme.onSurface),
     content: Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
