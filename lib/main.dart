@@ -4,12 +4,15 @@ import 'package:agrigreens/global/app_themes.dart';
 import 'package:agrigreens/global/client.dart';
 import 'package:agrigreens/repository/auth_repository/auth_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:agrigreens/firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(
+      widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((value) => Get.put(AuthRepo()));
@@ -20,6 +23,7 @@ Future<void> main() async {
     // home: MyApp(),
     home: LoginScreen(),
   ));
+  FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {
