@@ -33,16 +33,16 @@ class Variable extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Obx(
-                      () => Text(
+                    GetX<VarController>(builder: (context) {
+                      return Text(
                         controller.PH.value,
-                      ),
-                    ),
-                    Obx(
-                      () => Text(
+                      );
+                    }),
+                    GetX<VarController>(builder: (context) {
+                      return Text(
                         controller.temp.value,
-                      ),
-                    ),
+                      );
+                    }),
                     ElevatedButton(
                         onPressed: () {
                           AuthRepo.instance.logout();
