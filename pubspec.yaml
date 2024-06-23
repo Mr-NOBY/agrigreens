@@ -41,6 +41,7 @@ dependencies:
   mqtt_client: ^9.8.1
   connectivity_plus: ^5.0.2
   flutter_native_splash: ^2.4.0
+  syncfusion_flutter_gauges: ^26.1.38
 
 dev_dependencies:
   flutter_test:

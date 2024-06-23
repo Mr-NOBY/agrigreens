@@ -11,12 +11,12 @@ class VarController extends GetxController {
   // void updateValue(String message) {
   //   m.value = message;
   // }
-  RxString PH = "".obs;
+  RxString PH = "0".obs;
   void updatePH(String message) {
     PH.value = message;
   }
 
-  RxString temp = "".obs;
+  RxString temp = "0".obs;
   void updateTemp(String message) {
     temp.value = message;
   }
