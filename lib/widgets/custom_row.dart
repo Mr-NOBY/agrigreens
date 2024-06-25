@@ -26,8 +26,16 @@ class CustomRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        leftWidget,
-        rightWidget,
+        SizedBox(
+          height: MediaQuery.of(context).size.width * 0.5,
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: leftWidget,
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.width * 0.5,
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: rightWidget,
+        ),
       ],
     );
   }
