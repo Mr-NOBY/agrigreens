@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:agrigreens/global/app_themes.dart';
 import 'package:agrigreens/global/client.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Variable extends StatelessWidget {
@@ -60,8 +61,8 @@ class Variable extends StatelessWidget {
                         plotAreaBorderWidth: 0,
                         primaryXAxis: DateTimeAxis(
                           majorGridLines: const MajorGridLines(width: 0),
-                          // dateFormat: DateFormat.Hms(),
-                          // intervalType: DateTimeIntervalType.seconds,
+                          dateFormat: DateFormat.Hms(),
+                          intervalType: DateTimeIntervalType.minutes,
                           autoScrollingDelta: 60,
                           autoScrollingDeltaType: DateTimeIntervalType.seconds,
                         ),

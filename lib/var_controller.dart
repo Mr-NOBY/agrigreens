@@ -25,6 +25,13 @@ class VarController extends GetxController {
   var sensorData = <double>[].obs;
 
   void addData(double value, DateTime timestamp) {
+    if (sensorData.length >= 360) {
+      for (int i = 1; i < sensorData.length; i++) {
+        sensorData[i - 1] = sensorData[i];
+        timestamps[i - 1] = timestamps[i];
+      }
+    }
+    print(sensorData.length);
     sensorData.add(value);
     timestamps.add(timestamp);
   }
