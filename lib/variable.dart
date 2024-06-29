@@ -4,9 +4,9 @@ import 'package:agrigreens/widgets/custom_row.dart';
 import 'package:agrigreens/widgets/gauges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:agrigreens/global/app_themes.dart';
 import 'package:agrigreens/global/client.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Variable extends StatelessWidget {
   Variable({super.key});
@@ -52,6 +52,43 @@ class Variable extends StatelessWidget {
                         );
                       }),
                     ),
+                    Obx(() {
+                      if (controller.sensorData.isEmpty) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      return SfCartesianChart(
+                        plotAreaBorderWidth: 0,
+                        primaryXAxis: DateTimeAxis(
+                          majorGridLines: const MajorGridLines(width: 0),
+                          // dateFormat: DateFormat.Hms(),
+                          // intervalType: DateTimeIntervalType.seconds,
+                          autoScrollingDelta: 60,
+                          autoScrollingDeltaType: DateTimeIntervalType.seconds,
+                        ),
+                        primaryYAxis: const NumericAxis(
+                          axisLine: AxisLine(width: 0),
+                          majorTickLines: MajorTickLines(size: 0),
+                        ),
+                        zoomPanBehavior: ZoomPanBehavior(
+                          enablePanning: true,
+                          enablePinching: true,
+                          zoomMode: ZoomMode.x,
+                        ),
+                        tooltipBehavior:
+                            TooltipBehavior(enable: true, header: 'PH'),
+                        series: <CartesianSeries>[
+                          SplineSeries<double, DateTime>(
+                            enableTooltip: true,
+                            animationDuration: 0,
+                            dataSource: controller.sensorData,
+                            xValueMapper: (double data, int index) =>
+                                controller.timestamps[index],
+                            yValueMapper: (double data, _) => data,
+                            markerSettings: MarkerSettings(isVisible: true),
+                          )
+                        ],
+                      );
+                    }),
                     ElevatedButton(
                         onPressed: () {
                           AuthRepo.instance.logout();

@@ -20,4 +20,12 @@ class VarController extends GetxController {
   void updateTemp(String message) {
     temp.value = message;
   }
+
+  var timestamps = <DateTime>[].obs;
+  var sensorData = <double>[].obs;
+
+  void addData(double value, DateTime timestamp) {
+    sensorData.add(value);
+    timestamps.add(timestamp);
+  }
 }
