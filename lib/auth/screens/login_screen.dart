@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),
                 Image(
-                  image: AssetImage('assets/images/logo.png'),
+                  image: AssetImage('assets/images/logo_with_name.png'),
                 ),
                 Form(
                     key: LoginScreen.formKey,
