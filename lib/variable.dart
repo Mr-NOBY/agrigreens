@@ -1,4 +1,5 @@
 import 'package:agrigreens/repository/auth_repository/auth_repo.dart';
+import 'package:agrigreens/services/google_sheets_service.dart';
 import 'package:agrigreens/var_controller.dart';
 import 'package:agrigreens/widgets/custom_row.dart';
 import 'package:agrigreens/widgets/gauges.dart';
@@ -95,6 +96,16 @@ class Variable extends StatelessWidget {
                           AuthRepo.instance.logout();
                         },
                         child: Text('Log out')),
+                    ElevatedButton(
+                        onPressed: () {
+                          sendEmail("eo54872@gmail.com");
+                        },
+                        child: Text('Send Mail')),
+                    ElevatedButton(
+                        onPressed: () {
+                          downloadCSV();
+                        },
+                        child: Text('Download CSV')),
                   ],
                 ),
               ),

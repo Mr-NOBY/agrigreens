@@ -44,6 +44,14 @@ dependencies:
   syncfusion_flutter_gauges: ^26.1.38
   syncfusion_flutter_charts: ^26.1.39
   intl: ^0.19.0
+  googleapis_auth: ^1.6.0
+  googleapis: ^13.2.0
+  html: ^0.15.4
+  url_launcher: ^6.3.0
+  dio: ^5.4.3+1
+  path_provider: ^2.1.3
+  open_file: ^3.3.2
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:
@@ -113,7 +121,8 @@ flutter_native_splash:
   # of your splash screen to a solid color.  Use background_image to set the background of your
   # splash screen to a png image.  This is useful for gradients. The image will be stretch to the
   # size of the app. Only one parameter can be used, color and background_image cannot both be set.
-  color: "#11463c"
+  # color: "#11463c"
+  color: "#a0d995"
   #background_image: "assets/background.png"
 
   # Optional parameters are listed below.  To enable a parameter, uncomment the line by removing
@@ -156,7 +165,8 @@ flutter_native_splash:
     image: assets/images/splash.png
 
     # Splash screen background color.
-    color: "#11463c"
+    # color: "#11463c"
+    color: "#a0d995"
 
     # App icon background color.
     #icon_background_color: "#111111"

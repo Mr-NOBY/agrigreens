@@ -23,7 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Theme(
         data: Themes.darkthemeData,
         child: Scaffold(
-          backgroundColor: const Color.fromRGBO(17, 70, 60, 1),
+          backgroundColor: //Colors.white,
+              const Color.fromRGBO(17, 70, 60, 1),
           body: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
