@@ -3,6 +3,7 @@ import 'package:agrigreens/global/client.dart';
 import 'package:agrigreens/variable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 
 class AuthRepo extends GetxController {
@@ -29,6 +30,7 @@ class AuthRepo extends GetxController {
         ? Get.offAll(() => const LoginScreen())
         // : Get.offAll(() => MyHomePage(title: 'AgriGreens'));
         : Get.offAll(() => Variable());
+    FlutterNativeSplash.remove();
   }
 
   Future<void> logInWithEmailAndPassword(String email, String password) async {

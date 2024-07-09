@@ -23,7 +23,7 @@ Future<void> main() async {
     // home: MyApp(),
     home: LoginScreen(),
   ));
-  FlutterNativeSplash.remove();
+  // FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {
