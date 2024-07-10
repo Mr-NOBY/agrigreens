@@ -4,12 +4,12 @@ class Themes {
   static ThemeData mainthemeData = ThemeData(
     colorScheme: maincolorScheme,
     textTheme: textcolorScheme,
-
-    // useMaterial3: true,
+    useMaterial3: false,
   );
   static ThemeData darkthemeData = ThemeData(
     colorScheme: darkcolorScheme,
     textTheme: textcolorScheme,
+    useMaterial3: false,
   );
 
   static const ColorScheme maincolorScheme = ColorScheme(
