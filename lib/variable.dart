@@ -1,8 +1,7 @@
-import 'package:agrigreens/repository/auth_repository/auth_repo.dart';
-import 'package:agrigreens/services/google_sheets_service.dart';
 import 'package:agrigreens/var_controller.dart';
 import 'package:agrigreens/widgets/chart.dart';
 import 'package:agrigreens/widgets/custom_view.dart';
+import 'package:agrigreens/widgets/drawer.dart';
 import 'package:agrigreens/widgets/gauges.dart';
 import 'package:agrigreens/widgets/text_data.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +36,7 @@ class Variable extends StatelessWidget {
             ),
             // backgroundColor: Themes.maincolorScheme.secondary,
           ),
-          drawer: Drawer(child: Column()),
+          drawer: const CustomDrawer(),
           body: RefreshIndicator(
             onRefresh: _refreshConnection,
             child: SingleChildScrollView(
@@ -74,15 +73,6 @@ class Variable extends StatelessWidget {
                             value: controller.PH.value,
                             time: controller.timestamps.last,
                             unit: "");
-                        // Column(
-                        //   crossAxisAlignment: CrossAxisAlignment.center,
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     Text("PH: ${controller.PH.value} [unit]"),
-                        //     Text(
-                        //         "Time: ${DateFormat.jms().format(controller.timestamps.last)}"),
-                        //   ],
-                        // );
                       }),
                       bottomWidget: GetX<VarController>(builder: (context) {
                         if (controller.sensorData.isEmpty) {
@@ -94,21 +84,6 @@ class Variable extends StatelessWidget {
                         );
                       }),
                     ),
-                    ElevatedButton(
-                        onPressed: () {
-                          AuthRepo.instance.logout();
-                        },
-                        child: Text('Log out')),
-                    ElevatedButton(
-                        onPressed: () {
-                          sendEmail("eo54872@gmail.com");
-                        },
-                        child: Text('Send Mail')),
-                    ElevatedButton(
-                        onPressed: () {
-                          downloadCSV();
-                        },
-                        child: Text('Download CSV')),
                   ],
                 ),
               ),
