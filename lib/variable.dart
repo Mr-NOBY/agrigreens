@@ -47,42 +47,39 @@ class Variable extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CustomView(
-                      context: context,
-                      leftWidget: GetX<VarController>(builder: (context) {
-                        return Container(
-                          child: Gauge1(
-                            title: 'PH',
-                            value: controller.PH.value,
+                    GetX<VarController>(
+                      builder: (controller) {
+                        return CustomView(
+                          context: context,
+                          leftWidget: Container(
+                            child: Gauge1(
+                              title: 'PH',
+                              value: controller.PH.value,
+                            ),
                           ),
+                          rightWidget: controller.timestamps.isEmpty
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("PH:  [unit]"),
+                                    Text("Time: "),
+                                  ],
+                                )
+                              : TextData(
+                                  title: "PH",
+                                  value: controller.PH.value,
+                                  time: controller.timestamps.last,
+                                  unit: "",
+                                ),
+                          bottomWidget: controller.sensorData.isEmpty
+                              ? Center(child: CircularProgressIndicator())
+                              : Chart(
+                                  sData: controller.sensorData,
+                                  time: controller.timestamps,
+                                ),
                         );
-                      }),
-                      rightWidget: GetX<VarController>(builder: (context) {
-                        if (controller.timestamps.isEmpty) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("PH:  [unit]"),
-                              Text("Time: "),
-                            ],
-                          );
-                        }
-                        return TextData(
-                            title: "PH",
-                            value: controller.PH.value,
-                            time: controller.timestamps.last,
-                            unit: "");
-                      }),
-                      bottomWidget: GetX<VarController>(builder: (context) {
-                        if (controller.sensorData.isEmpty) {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                        return Chart(
-                          sData: controller.sensorData,
-                          time: controller.timestamps,
-                        );
-                      }),
+                      },
                     ),
                   ],
                 ),
