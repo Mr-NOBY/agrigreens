@@ -155,8 +155,8 @@ class MQTTClientWrapper {
         print('YOU GOT A NEW MESSAGE: $message');
 
         if (topic == '$EMAIL/system1/ph') {
-          varController.PH(message);
-          varController.addData(double.parse(message), DateTime.now());
+          // varController.PH(message);
+          varController.addData(DateTime.now(), message);
         } else if (topic == '$EMAIL/system1/temp') {
           varController.temp(message);
         }

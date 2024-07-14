@@ -42,7 +42,7 @@ class Variable extends StatelessWidget {
             child: SingleChildScrollView(
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
+                // height: MediaQuery.of(context).size.height,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -54,7 +54,7 @@ class Variable extends StatelessWidget {
                           leftWidget: Container(
                             child: Gauge1(
                               title: 'PH',
-                              value: controller.PH.value,
+                              value: controller.reading.value,
                             ),
                           ),
                           rightWidget: controller.timestamps.isEmpty
@@ -68,7 +68,7 @@ class Variable extends StatelessWidget {
                                 )
                               : TextData(
                                   title: "PH",
-                                  value: controller.PH.value,
+                                  value: controller.reading.value,
                                   time: controller.timestamps.last,
                                   unit: "",
                                 ),
